@@ -1,0 +1,4 @@
+Fastas exist...
+Remove the directory data/test_out/fasta/ if you want to write new fastas.
+HHblits run successful.
+sbatch: error: Batch job submission failed: Requested GRES option unsupported by configured SelectType plugin
