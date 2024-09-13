@@ -25,7 +25,7 @@ def read_fasta(fasta_file):
         for line in file:
             line = line.rstrip()
             if '>' in line:
-                ids.append(line[1:])
+                ids.append(line[1:].split("\t")[0])
             else:
                 seqs.append(line)
 
@@ -36,7 +36,7 @@ def write_fasta(fasta_df, outdir):
     """
 
     for ind, row in fasta_df.iterrows():
-        with open(outdir+row.ID+'.fasta', 'w') as file:
+        with open(outdir+"/"+row.ID+'.fasta', 'w') as file:
             file.write('>'+row.ID+'\n')
             file.write(row.sequence)
 
@@ -53,6 +53,6 @@ fasta_df = pd.DataFrame()
 fasta_df['ID'] = ids
 fasta_df['sequence'] = seqs
 #Save df
-fasta_df.to_csv(outdir+'id_seqs.csv', index=None)
+fasta_df.to_csv(outdir+ "/" +'id_seqs.csv', index=None, header=True)
 #Write individual fastas
 write_fasta(fasta_df, outdir)

@@ -1,37 +1,33 @@
 #!/bin/bash -x
-#SBATCH --output="path to out"
-#SBATCH --error="path to error"
-#SBATCH -A "your allocation id"
-#SBATCH -t 00:10:00 #Set at 10 minutes
-#SBATCH --array=1-N #N is the number of total proteins
+#SBATCH --output="data/results/step2_out.txt"
+#SBATCH --error="data/results/step2_error.txt"
+#SBATCH -A "td20170508"
+#SBATCH --array=1-34 #N is the number of total proteins
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=2 #How many CPUs to use
-#SBATCH --mem-per-cpu=2500 #Memory in Mb per CPU
+#SBATCH --mem-per-cpu=16000 #Memory in Mb per CPU
+#SBATCH --partition=bigmem #Partition to use according your needs
 
-#Load the necessary modules (e.g. python)
+#Args
+#input
+offset=$1 # useful if more than the max amount of allowed jobs is used
+OUTDIR=$2 # path to output
+FASTADIR=$3 # path to individual fasta seqs created in step 1
+HHBLITS=$4 # path to HHblits
+#DEFAULT
+UNICLUST="./data/uniclust30_2018_08/uniclust30_2018_08" # path to Uniclust30, according to setup
 
-#This checks if an offset is provided - useful if more than
-#the max amount of allowed jobs is used (0 if not provided)
-if [ -z $1 ]
-then
-        offset=0
-else
-        offset=$1
-fi
+# Load the necessary modules (e.g. python)
+
 LN=$(($SLURM_ARRAY_TASK_ID+$offset))
-IDS="path to ids"
 #Get ID
-ID=$(sed -n $LN'p' $IDS)
+ID=$(awk -F, -v line="$LN" 'NR==line {print $1}' "$FASTADIR/id_seqs.csv")
 echo $ID
-#Fasta with sequences to use for the PPI network
-OUTDIR="path to output"
-MSADIR=$OUTDIR/msas/
-mkdir $MSADIR
-FASTADIR="path to individual fasta seqs created in step 1"
-FASTA=$FASTADIR/$ID'.fasta'
-HHBLITS="path to HHblits"
-UNICLUST="path to Uniclust30, ../../data/uniclust30/uniclust30_2018_08 according to setup"
 
+MSADIR=$OUTDIR/msas/
+mkdir -p $MSADIR
+
+FASTA=$FASTADIR/$ID'.fasta'
 
 # Run HHblits to create MSA
 echo $ID

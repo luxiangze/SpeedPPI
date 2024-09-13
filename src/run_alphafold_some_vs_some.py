@@ -231,6 +231,7 @@ def main(num_ensemble,
   random_seed = random.randrange(sys.maxsize)
 
   #Get length of the first chain
+  print(protein_csv1.index) 
   target_row_info = protein_csv1.loc[target_row]
   target_id = target_row_info.ID
   target_seq = target_row_info.sequence

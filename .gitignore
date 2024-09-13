@@ -15,3 +15,5 @@ data/dev/blackbox_cracking/.DS_Store
 .DS_Store
 data/uniclust30_2018_08
 hh-suite
+data/seqs/*
+data/results
